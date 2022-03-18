@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "181592153641",
+    "project_id": "sign-in-93cd4",
+    "storage_bucket": "sign-in-93cd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181592153641:android:b738a872b0140bac2a0638",
+        "android_client_info": {
+          "package_name": "com.vectorspace.googlesignin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181592153641-7loaf8np205si24fo076ftkr4g9oo49u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vectorspace.googlesignin",
+            "certificate_hash": "8f6653692d2dafdd31d2a82a9d2969c48717647d"
+          }
+        },
+        {
+          "client_id": "181592153641-emrvrin7pt9m47fqklgc92iqre3hk869.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfP-VDA9wjpmJiLmjQ88l6uqdfw4iFgrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181592153641-emrvrin7pt9m47fqklgc92iqre3hk869.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

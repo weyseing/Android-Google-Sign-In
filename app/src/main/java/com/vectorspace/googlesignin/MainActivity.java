@@ -2,9 +2,10 @@
 | READ ME
 ========================================================================================================================================
 | protected void onCreate(Bundle savedInstanceState)                                    on create
+| protected void onStart()                                                              on start
 | private void signIn()                                                                 sign in
 | protected void onActivityResult(int requestCode, int resultCode, Intent data)         on activity result
-| private void navigateToSecondActivity()                                               navigate to 2nd activity
+| private void handleSignInResult(Task<GoogleSignInAccount> completedTask)              handle sign in result
 =======================================================================================================================================*/
 
 package com.vectorspace.googlesignin;
@@ -21,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // declare
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
-    Button btn_Sign_In;
+    SignInButton btn_Sign_In;
 
     // ==============================
     // on create
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         btn_Sign_In = findViewById(R.id.btn_sign_in);
 
         // initiate Google Sign In
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).requestEmail().build();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
 
         // btn sign in onclick listener
@@ -53,8 +55,22 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signIn();
             }
-
         });
+    }
+
+    // ==============================
+    // on start
+    // ==============================
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (acct != null) {
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            startActivity(intent);
+        }
     }
 
     //==============================
@@ -65,35 +81,36 @@ public class MainActivity extends AppCompatActivity {
         // start activity for result
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, 1000);
+
     }
 
     //==============================
     // on activity result
     // ==============================
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1000) {
-            Task <GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-                task.getResult(ApiException.class);
-
-                // navigate to 2nd activity
-                navigateToSecondActivity();
-            } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
         }
     }
 
     //==============================
-    // navigate to 2nd activity
+    // handle sign in result
     // ==============================
-    private void navigateToSecondActivity() {
-        finish();
-        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-        startActivity(intent);
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            startActivity(intent);
+
+        } catch (ApiException e) {
+            Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
